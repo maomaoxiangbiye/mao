@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.or  /dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.flowers.mapper.HufupinDetailMapper" >
+	<select id="listHufupinDetail" resultType="map" parameterType="map" >
+	    select * from hufupinmsg 
+	    <if test="describe != null and describe != '' " >
+		   	where huFuPinName like '%${describe}%'
+	    </if>
+  	</select>
+	
+  <insert id="addHufupinDetail" parameterType="com.flowers.model.HufupinDetail" >
+    insert into hufupinmsg 
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="huFuPinId != null" >
+        huFuPinId,
+      </if>
+      <if test="huFuPinName != null" >
+        huFuPinName,
+      </if>
+      <if test="huFuPinTypeName != null" >
+        huFuPinTypeName,
+      </if>
+      <if test="huFuPinNum != null" >
+        huFuPinNum,
+      </if>
+      <if test="huFuPinPrice != null" >
+        huFuPinPrice,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="pictureUrl != null" >
+        pictureUrl,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="huFuPinId != null" >
+        #{huFuPinId,jdbcType=INTEGER},
+      </if>
+      <if test="huFuPinName != null" >
+        #{huFuPinName,jdbcType=VARCHAR},
+      </if>
+      <if test="huFuPinTypeName != null" >
+        #{huFuPinTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="huFuPinNum != null" >
+        #{huFuPinNum,jdbcType=INTEGER},
+      </if>
+      <if test="huFuPinPrice != null" >
+        #{huFuPinPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="pictureUrl != null" >
+        #{pictureUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    <selectKey resultType="int" keyProperty="huFuPinId" order="BEFORE">
+    	select CASE  when huFuPinId is NULL then 1 else huFuPinId END huFuPinId
+		from (select max(huFuPinId)+1 huFuPinId from hufupinmsg)a
+    </selectKey>
+  </insert>	
+  
+	<update id="updateHufupinDetail" parameterType="com.flowers.model.HufupinDetail" >
+    update hufupinmsg 
+    <set >
+      <if test="huFuPinName != null" >
+        huFuPinName = #{huFuPinName,jdbcType=VARCHAR},
+      </if>
+      <if test="huFuPinTypeName != null" >
+        huFuPinTypeName = #{huFuPinTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="huFuPinNum != null" >
+        huFuPinNum = #{huFuPinNum,jdbcType=INTEGER},
+      </if>
+      <if test="huFuPinPrice != null" >
+        huFuPinPrice = #{huFuPinPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=INTEGER},
+      </if>
+      <if test="pictureUrl != null" >
+        pictureUrl = #{pictureUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where huFuPinId = #{huFuPinId,jdbcType=INTEGER}
+  </update>
+	
+  <delete id="deleteHufupinDetail" parameterType="java.lang.Integer" >
+    delete from hufupinmsg 
+    where huFuPinId = #{huFuPinId,jdbcType=INTEGER}
+  </delete>
+
+
+	<select id="listBuyCarDetail" resultType="map" parameterType="map" >
+	    select * from buycar 
+	    where userName = #{userName,jdbcType=VARCHAR}
+  	</select>
+	
+</mapper>

@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.or  /dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.flowers.mapper.UserOperationMapper" >
+	
+   <select id="listMyOrder" resultType="map" parameterType="map" >
+    SELECT * from orderdetail ord,userpara userp where userp.userName=ord.orderUserid 
+    <if test="userName != null and userName != '' " >
+	    and userName = #{userName,jdbcType=VARCHAR}    
+    </if>
+  </select>
+  
+  <insert id="addOrderDetail" parameterType="com.flowers.model.OrderDetail" >
+    insert into orderdetail 
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        orderId,
+      </if>
+      <if test="orderName != null" >
+        orderName,
+      </if>
+      <if test="orderUserid != null" >
+        orderUserid,
+      </if>
+      <if test="orderFlowerid != null" >
+        orderFlowerid,
+      </if>
+      <if test="orderFlowerType != null" >
+        orderFlowerType,
+      </if>
+      <if test="orderFlowernum != null" >
+        orderFlowernum,
+      </if>
+      <if test="orderSize != null" >
+        orderSize,
+      </if>
+      <if test="orderdate != null" >
+        orderdate,
+      </if>
+      <if test="ordertime != null" >
+        ordertime,
+      </if>
+      <if test="orderAddress != null" >
+        orderAddress,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="orderName != null" >
+        #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderUserid != null" >
+        #{orderUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFlowerid != null" >
+        #{orderFlowerid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFlowerType != null" >
+        #{orderFlowerType,jdbcType=INTEGER},
+      </if>
+      <if test="orderFlowernum != null" >
+        #{orderFlowernum,jdbcType=INTEGER},
+      </if>
+      <if test="orderSize != null" >
+        #{orderSize,jdbcType=INTEGER},
+      </if>
+      <if test="orderdate != null" >
+        #{orderdate,jdbcType=VARCHAR},
+      </if>
+      <if test="ordertime!= null" >
+        #{ordertime,jdbcType=VARCHAR},
+      </if>
+      <if test="orderAddress!= null" >
+        #{orderAddress,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    <selectKey resultType="int" keyProperty="orderId" order="BEFORE">
+    	select CASE  when orderId is NULL then 1 else orderId END orderId
+		from (select max(orderId)+1 orderId from orderdetail)a
+    </selectKey>
+  </insert>    
+  	
+  <delete id="deleteMyOrder" parameterType="java.lang.Integer" >
+    delete from orderdetail
+    where orderId = #{orderId,jdbcType=INTEGER}
+  </delete>
+  
+<!--	个人信息-->
+   <select id="listMyMessage" resultType="map" parameterType="map" >
+    select *
+    from userpara 
+    <if test="loginType != null and loginType != '' " >
+    	where loginType = #{loginType,jdbcType=INTEGER} 
+    </if>
+    <if test="userName != null and userName != '' " >
+	    and userName = #{userName,jdbcType=VARCHAR}    
+    </if>
+  </select>
+
+   <select id="listMyDetailMessage" resultType="map" parameterType="map" >
+    select *
+    from userDetail 
+    <if test="userName != null and userName != '' " >
+	    where userName = #{userName,jdbcType=VARCHAR}    
+    </if>
+  </select>
+  
+  <update id="updateMyMessage" parameterType="com.flowers.model.Userpara" >
+    update userpara 
+    <set >
+      <if test="userPassword != null" >
+        userPassword = #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userDescribe != null" >
+        userDescribe = #{userDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="telphone != null" >
+        telphone = #{telphone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where userName = #{userName,jdbcType=VARCHAR}
+  </update>  
+
+  <update id="updateMyDetailMessage" parameterType="com.flowers.model.Userpara" >
+    update userDetail 
+    <set >
+      <if test="userOld != null" >
+        userOld = #{userOld,jdbcType=VARCHAR},
+      </if>
+      <if test="userZhengZhi != null" >
+        userZhengZhi = #{userZhengZhi,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        userAddress = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="telphone != null" >
+        userTel = #{telphone,jdbcType=VARCHAR},
+      </if>
+      <if test="userSex != null" >
+        userSex = #{userSex,jdbcType=INTEGER},
+      </if>
+      <if test="userWorkExperience != null" >
+        userWorkExperience = #{userWorkExperience,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where userName = #{userName,jdbcType=VARCHAR}
+  </update>
+  
+	<!--  鲜花详情模块-->
+   <select id="listFlowerDetail" resultType="map" parameterType="map" >
+    select *
+    from flowersdetail
+    <if test="flowersName != null and flowersName != '' " >
+	    where flowersName like '%${flowersName}%'  
+    </if>
+   </select>  
+  
+	<!--  收藏模块-->
+   <select id="listCollectFlower" resultType="map" parameterType="map" >
+    SELECT * from usercollect col,flowersDetail fd where col.flowersId=fd.flowersId
+    <if test="userName != null and userName != '' " >
+	    and userName = #{userName,jdbcType=VARCHAR}    
+    </if>
+   </select>
+   
+ <insert id="addCollectFlower" parameterType="com.flowers.model.UserCollect" >
+    insert into usercollect
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        userName,
+      </if>
+      <if test="flowersId != null" >
+        flowersId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="flowersId != null" >
+        #{flowersId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>	   
+   
+   <delete id="deleteCollectFlower" parameterType="java.lang.Integer" >
+     delete from usercollect
+     where userName = #{userName,jdbcType=VARCHAR}
+   </delete>
+   
+   
+   <select id="listMyJobs" resultType="map" parameterType="map" >
+	SELECT DISTINCT u.userName,u.userDescribe,u.telphone,u.address,cfbm.id,cfbm.companyMessage,cfbm.jobsDesc,cfbm.jobsMoney,cfbm.jobsName,cfbm.jobsYqJieShao,cfbm.jobsPersons
+	from userandcompany uac,userpara u,companyfabumsg cfbm 
+	where uac.companyName = u.userName and u.userName = cfbm.companyName 
+    <if test="userName != null and userName != '' " >
+	    and uac.userName = '${userName}'  
+    </if>
+    <if test="describe != null and describe != '' " >
+	    and uac.companyName like '%${describe}%'  
+    </if>    
+   </select>   
+
+   <delete id="deleteListMyJobs" parameterType="map" >
+     delete from userandcompany  
+     where userName = #{userName,jdbcType=VARCHAR} 
+     AND companyName = #{companyName,jdbcType=VARCHAR} 
+   </delete>
+
+ 	<insert id="addMyJobs" parameterType="com.flowers.model.Userandcompany" >
+    	insert into userandcompany 
+	    <trim prefix="(" suffix=")" suffixOverrides="," >
+	      <if test="userName != null" >
+	        userName,
+	      </if>
+	      <if test="companyName != null" >
+	        companyName,
+	      </if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      <if test="userName != null" >
+	        #{userName,jdbcType=VARCHAR},
+	      </if>
+	      <if test="companyName != null" >
+	        #{companyName,jdbcType=VARCHAR},
+	      </if>
+	    </trim>
+  </insert>	
+
+   <select id="selectDiscuss" resultType="map" parameterType="map" >
+	select * from liuYan 
+    <if test="companyName != null and companyName != '' " >
+	     where companyName = '${companyName}'  
+    </if>
+   </select>
+
+ 	<insert id="addSelectDiscuss" parameterType="com.flowers.model.LiuYan" >
+    	insert into liuYan
+	    <trim prefix="(" suffix=")" suffixOverrides="," >
+	      <if test="companyName != null" >
+	        companyName,
+	      </if>
+	      <if test="pingLunName != null" >
+	        pingLunName,
+	      </if>
+	      <if test="pingLunContent != null" >
+	        pingLunContent,
+	      </if>
+	      <if test="pingLunDate != null" >
+	        pingLunDate,
+	      </if>
+	      <if test="pingLunId != null" >
+	        pingLunId,
+	      </if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      <if test="companyName != null" >
+	        #{companyName,jdbcType=VARCHAR},
+	      </if>
+	      <if test="pingLunName != null" >
+	        #{pingLunName,jdbcType=VARCHAR},
+	      </if>
+	      <if test="pingLunContent != null" >
+	        #{pingLunContent,jdbcType=VARCHAR},
+	      </if>
+	      <if test="pingLunDate != null" >
+	        #{pingLunDate,jdbcType=VARCHAR},
+	      </if>
+	      <if test="pingLunId != null" >
+	        #{pingLunId,jdbcType=INTEGER},
+	      </if>
+	    </trim>
+	    <selectKey resultType="int" keyProperty="pingLunId" order="BEFORE">
+    		select CASE  when pingLunId is NULL then 1 else pingLunId END pingLunId
+			from (select max(pingLunId)+1 pingLunId from liuYan where companyName = '${companyName}' 
+			and pingLunName = '${pingLunName}')a
+    	</selectKey>
+  </insert>
+   
+   
+   
+  <insert id="addBuyCarDetail" parameterType="com.flowers.model.BuyCar" >
+    insert into buycar  
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="huFuPinId != null" >
+        huFuPinId,
+      </if>
+      <if test="buyNum != null" >
+        buyNum,
+      </if>
+      <if test="userName != null" >
+        userName,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="telphone!= null" >
+        telphone,
+      </if>
+      <if test="payType != null" >
+        payType,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>     
+      <if test="huFuPinId != null" >
+        #{huFuPinId,jdbcType=INTEGER},
+      </if>
+      <if test="buyNum != null" >
+        #{buyNum,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="telphone != null" >
+        #{telphone,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=INTEGER},
+      </if>
+    </trim>
+    <selectKey resultType="int" keyProperty="id" order="BEFORE">
+    	select CASE  when id is NULL then 1 else id END id
+		from (select max(id)+1 id from buycar)a
+    </selectKey>
+  </insert>    
+   
+  <delete id="deleteBuyCar" parameterType="java.lang.Integer" >
+    delete from buycar 
+    where id = #{id,jdbcType=INTEGER}
+  </delete>   
+        
+</mapper>

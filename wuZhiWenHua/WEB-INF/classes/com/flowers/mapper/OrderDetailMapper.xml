@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.or  /dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.flowers.mapper.OrderDetailMapper" >
+	<select id="listOrderDetail" resultType="map" parameterType="map" >
+	    select orderd.*,flty.flowerName,fl.flowersName,userp.userName 
+	    from flowersdetail fl,flowertype flty,orderdetail orderd,userpara userp 
+	    where userp.userId=orderd.orderUserid and fl.flowersId=orderd.orderFlowerid and flty.flowerId=orderd.orderFlowerType
+	    <if test="describe != null and describe != '' " >
+		   	and orderName like '%${describe}%'
+	    </if>
+  	</select>
+	
+  <insert id="addOrderDetail" parameterType="com.flowers.model.OrderDetail" >
+    insert into orderdetail 
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        orderId,
+      </if>
+      <if test="orderName != null" >
+        orderName,
+      </if>
+      <if test="orderUserid != null" >
+        orderUserid,
+      </if>
+      <if test="orderFlowerid != null" >
+        orderFlowerid,
+      </if>
+      <if test="orderFlowerType != null" >
+        orderFlowerType,
+      </if>
+      <if test="orderFlowernum != null" >
+        orderFlowernum,
+      </if>
+      <if test="orderSize != null" >
+        orderSize,
+      </if>
+      <if test="orderdate != null" >
+        orderdate,
+      </if>
+      <if test="ordertime != null" >
+        ordertime,
+      </if>
+      <if test="orderAddress != null" >
+        orderAddress,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="orderName != null" >
+        #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderUserid != null" >
+        #{orderUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFlowerid != null" >
+        #{orderFlowerid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFlowerType != null" >
+        #{orderFlowerType,jdbcType=INTEGER},
+      </if>
+      <if test="orderFlowernum != null" >
+        #{orderFlowernum,jdbcType=INTEGER},
+      </if>
+      <if test="orderSize != null" >
+        #{orderSize,jdbcType=INTEGER},
+      </if>
+      <if test="orderdate != null" >
+        #{orderdate,jdbcType=VARCHAR},
+      </if>
+      <if test="ordertime!= null" >
+        #{ordertime,jdbcType=VARCHAR},
+      </if>
+      <if test="orderAddress!= null" >
+        #{orderAddress,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    <selectKey resultType="int" keyProperty="orderId" order="BEFORE">
+    	select CASE  when orderId is NULL then 1 else orderId END orderId
+		from (select max(orderId)+1 orderId from orderdetail)a
+    </selectKey>
+  </insert>	
+  
+	<update id="updateOrderDetail" parameterType="com.flowers.model.OrderDetail" >
+    update orderdetail
+    <set >
+      <if test="orderName != null" >
+        orderName = #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderUserid != null" >
+        orderUserid = #{orderUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFlowerid != null" >
+        orderFlowerid = #{orderFlowerid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFlowerType != null" >
+        orderFlowerType = #{orderFlowerType,jdbcType=INTEGER},
+      </if>
+      <if test="orderFlowernum != null" >
+        orderFlowernum = #{orderFlowernum,jdbcType=INTEGER},
+      </if>
+      <if test="orderSize != null" >
+        orderSize = #{orderSize,jdbcType=INTEGER},
+      </if>
+      <if test="orderdate!= null" >
+        orderdate = #{orderdate,jdbcType=VARCHAR},
+      </if>
+      <if test="ordertime!= null" >
+        ordertime = #{ordertime,jdbcType=VARCHAR},
+      </if>
+      <if test="orderAddress!= null" >
+        orderAddress = #{orderAddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where orderId = #{orderId,jdbcType=INTEGER}
+  </update>
+	
+  <delete id="deleteOrderDetail" parameterType="java.lang.Integer" >
+    delete from orderdetail
+    where orderId = #{orderId,jdbcType=INTEGER}
+  </delete>
+	
+</mapper>

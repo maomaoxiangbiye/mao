@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.flowers.mapper.ManagerOperUserMapper" >
+	<resultMap id="BaseResultMap" type="com.flowers.model.Userpara" >
+	    <id column="userId" property="userId" jdbcType="INTEGER" />
+	    <result column="loginType" property="loginType" jdbcType="INTEGER" />
+	    <result column="userName" property="userName" jdbcType="VARCHAR" />
+	    <result column="userPassword" property="userPassword" jdbcType="VARCHAR" />
+	    <result column="userDescribe" property="userDescribe" jdbcType="VARCHAR" />
+	    <result column="address" property="address" jdbcType="VARCHAR" />
+	    <result column="telphone" property="telphone" jdbcType="VARCHAR" />
+  	</resultMap>
+  	<sql id="Base_Column_List" >
+    	userId, loginType,userName, userPassword, userDescribe, address, telphone
+  	</sql>
+	<select id="listUserMsg" resultMap="BaseResultMap" parameterType="map" >
+	    select 
+	    <include refid="Base_Column_List" />
+	    from userpara 
+	    	where loginType = #{loginType,jdbcType=INTEGER} 
+	    <if test="describe != null and describe != '' " >
+		    and userDescribe like '%${describe}%'
+	    </if>
+  	</select>
+
+	<select id="listLiuYanMsgByShengFen" resultType="map" parameterType="map" >
+	    select * from liuyan  where companyName like '%${shengFenName}%'
+	    <if test="describe != null and describe != '' " >
+		    and pingLunName like '%${describe}%'
+	    </if>
+  	</select>
+
+	<select id="listLiuYanMsg" resultType="map" parameterType="map" >
+	    select * from liuyan
+	    <if test="describe != null and describe != '' " >
+		    where pingLunName like '%${describe}%'
+	    </if>
+  	</select>
+	
+	<update id="updateUserMsg" parameterType="com.flowers.model.Userpara" >
+    update userpara
+    <set >
+      <if test="userName != null" >
+        userName = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null" >
+        userPassword = #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userDescribe != null" >
+        userDescribe = #{userDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="telphone != null" >
+        telphone = #{telphone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where userId = #{userId,jdbcType=INTEGER}
+  </update>
+	
+  <delete id="deleteUserMsg" parameterType="java.lang.Integer" >
+    delete from userpara
+    where userId = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteLiuyan" parameterType="java.lang.Integer" >
+    delete from liuyan
+    where id = #{id,jdbcType=INTEGER}
+  </delete>	
+</mapper>

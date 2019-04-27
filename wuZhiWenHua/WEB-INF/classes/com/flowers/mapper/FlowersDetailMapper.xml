@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.or  /dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.flowers.mapper.FlowersDetailMapper" >
+	<resultMap id="BaseResultMap" type="com.flowers.model.FlowersDetail" >
+	    <id column="flowersId" property="flowersId" jdbcType="INTEGER" />
+	    <result column="flowersName" property="flowersName" jdbcType="VARCHAR" />
+	    <result column="flowersDetail" property="flowersDetail" jdbcType="VARCHAR" />
+	    <result column="flowersDesc" property="flowersDesc" jdbcType="VARCHAR" />
+	    <result column="flowersType" property="flowersType" jdbcType="INTEGER" />
+	    <result column="flowersPrice" property="flowersPrice" jdbcType="VARCHAR" />
+	    <result column="flowersNum" property="flowersNum" jdbcType="VARCHAR" />
+  	</resultMap>
+  	<sql id="Base_Column_List" >
+    	flowersId, flowersName,flowersDesc, flowersDetail, flowersType,flowersPrice,flowersNum
+  	</sql>
+	<select id="listFlowerDetail" resultMap="BaseResultMap" parameterType="map" >
+	    select 
+	    <include refid="Base_Column_List" />
+	    from flowersdetail
+	    <if test="flowersType != null and flowersType != '' " >
+		    where flowersType = #{flowersType,jdbcType=INTEGER} 
+	    </if> 
+	    <if test="describe != null and describe != '' " >
+		   	and flowersName like '%${describe}%'
+	    </if>
+
+  	</select>
+	
+  <insert id="addFlowersDetail" parameterType="com.flowers.model.FlowersDetail" >
+    insert into flowersdetail 
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="flowersId != null" >
+        flowersId,
+      </if>
+      <if test="flowersName != null" >
+        flowersName,
+      </if>
+      <if test="flowersDetail != null" >
+        flowersDetail,
+      </if>
+      <if test="flowersDesc != null" >
+        flowersDesc,
+      </if>
+      <if test="flowersType != null" >
+        flowersType,
+      </if>
+      <if test="flowersPrice != null" >
+        flowersPrice,
+      </if>
+      <if test="flowersNum != null" >
+        flowersNum,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="flowersId != null" >
+        #{flowersId,jdbcType=INTEGER},
+      </if>
+      <if test="flowersName != null" >
+        #{flowersName,jdbcType=VARCHAR},
+      </if>
+      <if test="flowersDesc != null" >
+        #{flowersDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="flowersDetail != null" >
+        #{flowersDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="flowersType != null" >
+        #{flowersType,jdbcType=INTEGER},
+      </if>
+      <if test="flowersPrice != null" >
+        #{flowersPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="flowersNum != null" >
+        #{flowersNum,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    <selectKey resultType="int" keyProperty="flowersId" order="BEFORE">
+    	select CASE  when flowersId is NULL then 1 else flowersId END flowersId
+		from (select max(flowersId)+1 flowersId from flowersdetail)a
+    </selectKey>
+  </insert>	
+  
+	<update id="updateFlowersDetail" parameterType="com.flowers.model.FlowersDetail" >
+    update flowersdetail
+    <set >
+      <if test="flowersName != null" >
+        flowersName = #{flowersName,jdbcType=VARCHAR},
+      </if>
+      <if test="flowersDetail != null" >
+        flowersDetail = #{flowersDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="flowersDesc != null" >
+        flowersDesc = #{flowersDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="flowersPrice != null" >
+        flowersPrice = #{flowersPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="flowersNum!= null" >
+        flowersNum = #{flowersNum,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where flowersId = #{flowersId,jdbcType=INTEGER}
+  </update>
+	
+  <delete id="deleteFlowersDetail" parameterType="java.lang.Integer" >
+    delete from flowersdetail
+    where flowersId = #{flowersId,jdbcType=INTEGER}
+  </delete>
+	
+</mapper>
